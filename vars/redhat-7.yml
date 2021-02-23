@@ -1,0 +1,3 @@
+---
+msmtp_packages:
+  - msmtp

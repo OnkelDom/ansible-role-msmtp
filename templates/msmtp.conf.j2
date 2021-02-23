@@ -1,0 +1,34 @@
+# {{ ansible_managed }}
+
+# Set default values for all following accounts.
+defaults
+{% for key, value in mta_config.defaults.items()|sort %}
+{%   if value is sameas true %}
+{{ key }}
+{%   elif value is string or value is number %}
+{{ key }} {{ value }}
+{%   else %}
+{%     for v in value %}
+{{ key }} {{ v }}
+{%     endfor %}
+{%   endif %}
+{% endfor %}
+
+# accounts
+{% for key, value in mta_config.accounts.items()|sort %}
+{%   if value is sameas true %}
+{{ key }}
+{%   elif value is string or value is number %}
+{{ key }} {{ value }}
+{%   else %}
+{%     for v in value %}
+{{ key }} {{ v }}
+{%     endfor %}
+{%   endif %}
+{% endfor %}
+
+# Set a default account
+account default: {{ mail_domain }}
+
+# Map local users to mail addresses (for crontab)
+aliases /etc/aliases

@@ -1,0 +1,49 @@
+---
+mta_config:
+  defaults:
+    auth: "on"
+    tls: "on"
+    tls_trust_file: /etc/ssl/certs/ca-certificates.crt
+    logfile: ~/.msmtp.log
+    syslog: "on"
+    timeout: 30
+  accounts:
+    account: "{{ mail_domain }}"
+    host: mail.{{ mail_domain }}
+    port: 587
+    from: service@{{ mail_domain }}
+    user: service@{{ mail_domain }}
+    password: "{{ mail_pass }}"
+mta_aliases:
+  - user: mailer-daemon
+    alias: postmaster
+  - user: postmaster
+    alias: root
+  - user: hostmaster
+    alias: root
+  - user: webmaster
+    alias: root
+  - user: abuse
+    alias: root
+  - user: system
+    alias: root
+  - user: mail
+    alias: root
+  - user: sshd
+    alias: root
+  - user: ldap
+    alias: root
+  - user: security
+    alias: root
+  - user: www
+    alias: webmaster
+  - user: info
+    alias: postmaster
+  - user: marketing
+    alias: postmaster
+  - user: sales
+    alias: postmaster
+  - user: support
+    alias: postmaster
+  - user: ntp
+    alias: root

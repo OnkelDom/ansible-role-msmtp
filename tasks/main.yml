@@ -1,0 +1,31 @@
+---
+- name: gather operating system variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution_file_variety | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_version.split('.')[0] }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  tags: msmtp
+
+- name: install mssmtp
+  package:
+    name: "{{ msmtp_packages }}"
+    state: present
+  tags: msmtp
+
+- name: configure /etc/msmtprc & /etc/aliases
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: aliases_update
+  with_items:
+    - { src: msmtp.conf.j2, dest: /etc/msmtprc }
+    - { src: aliases.j2, dest: /etc/aliases }
+  tags: msmtp
